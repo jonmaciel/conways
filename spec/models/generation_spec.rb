@@ -38,6 +38,13 @@ RSpec.describe Generation, type: :model do
       expect(next_gen.generation_number).to eq(generation.generation_number + 1)
     end
 
+    it 'rolls back if saving new generation fails' do
+      allow_any_instance_of(Cell).to receive(:save!).and_raise(ActiveRecord::RecordInvalid)
+
+      expect { generation.next_generation }.to raise_error(ActiveRecord::RecordInvalid)
+      expect { generation.reload }.to change { generation.cells.count }.by(0)
+    end
+
     it 'keeps cells with two or three live neighbors alive' do
       cell = next_gen.cells.find_by(x: 0, y: 0)
       expect(cell.alive).to be(true)

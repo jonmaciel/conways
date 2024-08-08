@@ -1,54 +1,29 @@
 # frozen_string_literal: true
 
 class BoardsController < ApplicationController
-  before_action :set_board, only: %i[show update destroy]
+  before_action :validate_csv, only: [:create]
 
-  # GET /boards
-  def index
-    @boards = Board.all
-
-    render json: @boards
-  end
-
-  # GET /boards/1
-  def show
-    render json: @board
-  end
-
-  # POST /boards
   def create
-    @board = Board.new(board_params)
+    board = Board.new
 
-    if @board.save
-      render json: @board, status: :created, location: @board
+    GenerationBuilderService.new(csv_data, board).call
+
+    if board.save
+      render json: { id: board.id }, status: :created
     else
-      render json: @board.errors, status: :unprocessable_entity
+      render json: { errors: board.errors.full_messages }, status: :unprocessable_entity
     end
-  end
-
-  # PATCH/PUT /boards/1
-  def update
-    if @board.update(board_params)
-      render json: @board
-    else
-      render json: @board.errors, status: :unprocessable_entity
-    end
-  end
-
-  # DELETE /boards/1
-  def destroy
-    @board.destroy!
   end
 
   private
 
-  # Use callbacks to share common setup or constraints between actions.
-  def set_board
-    @board = Board.find(params[:id])
+  def validate_csv
+    return if CsvValidator.new(csv_data).valid?
+
+    render json: { error: 'Invalid CSV file' }, status: :bad_request
   end
 
-  # Only allow a list of trusted parameters through.
-  def board_params
-    params.require(:board).permit(:name, :attempts_count)
+  def csv_data
+    @csv_data ||= params[:file]&.read
   end
 end
