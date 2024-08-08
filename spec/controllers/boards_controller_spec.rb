@@ -8,9 +8,6 @@ RSpec.describe BoardsController, type: :controller do
     let(:invalid_file) { fixture_file_upload('invalid.csv', 'text/csv') }
 
     context 'with valid parameters' do
-      before do
-      end
-
       it 'creates a new Generation and returns its id' do
         post :create, params: { file: }
 

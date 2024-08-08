@@ -1,8 +1,13 @@
 AllCops:
   NewCops: enable
   SuggestExtensions: false
+  Exclude:
+    - 'bin/**/*'
+    - 'config/**/*'
+    - 'db/schema.rb'
 
 Style/Documentation:
   Enabled: false
 Metrics/BlockLength:
   AllowedMethods: ['describe', 'context']
+
