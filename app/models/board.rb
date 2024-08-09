@@ -5,6 +5,8 @@ class Board < ApplicationRecord
 
   has_many :generations, dependent: :destroy
 
+  default_scope { order(id: :desc) }
+
   def as_json(*_args)
     {
       id:,
