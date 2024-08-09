@@ -1,24 +1,63 @@
-# README
+# Conway's Game of Life - Backend
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is the backend for Conway's Game of Life, implemented in Ruby on Rails. The backend manages boards and their generations, providing an API for the front-end interface.
 
-Things you may want to cover:
+## Ruby version
 
-* Ruby version
+- Ruby version: 3.3.4
 
-* System dependencies
+## Table of Contents
 
-* Configuration
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Installation](#installation)
+- [API Endpoints](#api-endpoints)
+- [Testing](#testing)
 
-* Database creation
+## Features
 
-* Database initialization
+- Create boards with initial states using CSV uploads.
+- Manage generations of the board.
+- Retrieve the next generation based on game rules.
+- Keep track of attempts made on the board.
 
-* How to run the test suite
+## Technologies Used
 
-* Services (job queues, cache servers, search engines, etc.)
+- **Ruby on Rails**: Server-side framework for building the API.
+- **PostgreSQL**: The chosen database for the application.
+- **RSpec**: For testing the application.
+- **CSV**: For handling CSV uploads.
 
-* Deployment instructions
+## Installation
 
-* ...
+1. Install the required gems:
+```bash
+bundle install 
+```
+
+2. create database
+```bash
+rails db:create
+rails db:migrate
+```
+
+3. Start the server:
+```bash
+rails s
+```
+
+## API Endpoints
+
+- **GET** `/boards`: Retrieve all boards.
+- **GET** `/boards/:id`: Retrieve a specific board.
+- **POST** `/boards`: Upload a CSV file to create a new board.
+- **POST** `/boards/:id/next_generation`: Advance the board to the next generation.
+
+
+## Testing
+```bash
+bundle exec rspec
+
+```
+
+
