@@ -6,7 +6,7 @@ class BoardsController < ApplicationController
   def create
     board = Board.new
 
-    GenerationBuilderService.new(csv_data, board).call
+    GenerationParserService.new(csv_data, board).call
 
     if board.save
       render json: { id: board.id }, status: :created
@@ -15,9 +15,7 @@ class BoardsController < ApplicationController
     end
   end
 
-
   private
-
 
   def validate_csv
     return if CsvValidator.new(csv_data).valid?

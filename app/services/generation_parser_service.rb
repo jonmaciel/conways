@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class GenerationBuilderService
+class GenerationParserService
   def initialize(csv_data, board)
     @csv_data = csv_data
     @board = board

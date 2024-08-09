@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe GenerationBuilderService do
+RSpec.describe GenerationParserService do
   describe '#call' do
     let(:csv_data) do # 3x3 board
       <<~CSV
