@@ -3,6 +3,34 @@
 require 'rails_helper'
 
 RSpec.describe BoardsController, type: :controller do
+  describe 'GET #index' do
+    it 'returns a list of all boards' do
+      create_list(:board, 3, :three_by_three)
+
+      get :index
+
+      expect(response).to have_http_status(:ok)
+      expect(JSON.parse(response.body).size).to eq(3)
+    end
+  end
+
+  describe 'GET #show' do
+    let(:board) { create(:board, :three_by_three) }
+
+    it 'returns a board' do
+      get :show, params: { id: board.id }
+
+      expect(response).to have_http_status(:ok)
+      expect(JSON.parse(response.body)['board']['id']).to eq(board.id)
+    end
+
+    it 'returns an error if the board does not exist' do
+      get :show, params: { id: -1 }
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
   describe 'POST #create' do
     let(:file) { fixture_file_upload('board.csv', 'text/csv') }
     let(:invalid_file) { fixture_file_upload('invalid.csv', 'text/csv') }

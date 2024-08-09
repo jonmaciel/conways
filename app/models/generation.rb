@@ -15,6 +15,8 @@ class Generation < ApplicationRecord
   end
 
   def next_generations(number_of_generations = 1)
+    return self if board.game_over?
+
     Generation.transaction do
       (1..number_of_generations).inject(self) do |last_generation, _|
         new_generation = last_generation.dup
@@ -29,15 +31,6 @@ class Generation < ApplicationRecord
         new_generation
       end
     end
-  end
-
-  def next_generation
-    new_generation = dup
-    new_generation.generation_number += 1
-
-    new_generation_state(new_generation)
-
-    new_generation
   end
 
   private

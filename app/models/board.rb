@@ -36,12 +36,15 @@ class Board < ApplicationRecord
   end
 
   def check_stability?
-    return false if generations.count < 2
+    return false if generations.size < 2
 
-    current_gen = generations.last
-    previous_gen = generations[-2]
+    current_gen_cells = generation_cells(generations.last)
+    previous_gen_cells = generation_cells(generations[-2])
 
-    current_gen.cells.map { |cell| [cell.x, cell.y, cell.alive] } ==
-      previous_gen.cells.map { |cell| [cell.x, cell.y, cell.alive] }
+    current_gen_cells == previous_gen_cells
+  end
+
+  def generation_cells(generation)
+    generation.cells.map { |cell| [cell.x, cell.y, cell.alive] }
   end
 end

@@ -32,7 +32,7 @@ RSpec.describe Generation, type: :model do
   end
 
   describe '#next_generations' do
-    let(:next_gen) { generation.next_generations }
+    subject(:next_gen) { generation.next_generations }
 
     it 'creates a new generation with incremented generation_number' do
       expect(next_gen.generation_number).to eq(generation.generation_number + 1)
@@ -78,6 +78,26 @@ RSpec.describe Generation, type: :model do
         last_generation = generation.next_generations(number_of_generations)
 
         expect(last_generation.generation_number).to eq(generation.generation_number + number_of_generations)
+      end
+    end
+
+    context 'when game overs before the number of attempts is reached' do
+      let(:number_of_generations) { Board::MAX_ATTEMPTS + 1 }
+
+      before { generation.next_generations(number_of_generations) }
+
+      it 'creates les genearions than the max of attempts' do
+        expect(board.reload.generations.count).to be < number_of_generations
+      end
+    end
+
+    context 'when the game is over' do
+      before { expect(board).to receive(:game_over?).and_return(true) }
+
+      it { is_expected.to eq(generation) }
+
+      it "doesn't create any generations" do
+        expect { generation.next_generations }.to change { Generation.count }.by(0)
       end
     end
   end

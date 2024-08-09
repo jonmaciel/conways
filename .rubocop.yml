@@ -8,6 +8,9 @@ AllCops:
 
 Style/Documentation:
   Enabled: false
+
 Metrics/BlockLength:
   AllowedMethods: ['describe', 'context']
 
+Metrics/MethodLength:
+  Max: 15
