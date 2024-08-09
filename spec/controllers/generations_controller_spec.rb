@@ -21,11 +21,13 @@ RSpec.describe GenerationsController, type: :controller do
           json_response = JSON.parse(response.body)
 
           expect(response).to have_http_status(:created)
-          expect(json_response['id']).to eq(Generation.last.id)
+
+          expect(json_response['board']['id']).to eq(Board.last.id)
+          expect(json_response['board']['last_generation']['id']).to eq(Generation.last.id)
         end
       end
 
-      context 'when especified number of generations' do
+      context 'when the number of generations is specified' do
         let(:number_of_generations) { rand(2..10) }
 
         it 'creates the generations' do

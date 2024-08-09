@@ -9,7 +9,7 @@ class BoardsController < ApplicationController
     GenerationParserService.new(csv_data, board).call
 
     if board.save
-      render json: { id: board.id }, status: :created
+      render json: { board: }, status: :created
     else
       render json: { errors: board.errors.full_messages }, status: :unprocessable_entity
     end

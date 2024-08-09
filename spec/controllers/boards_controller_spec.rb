@@ -14,7 +14,8 @@ RSpec.describe BoardsController, type: :controller do
         json_response = JSON.parse(response.body)
 
         expect(response).to have_http_status(:created)
-        expect(json_response['id']).to eq(Board.last.id)
+        expect(json_response['board']['id']).to eq(Board.last.id)
+        expect(json_response['board']['last_generation']['id']).to eq(Generation.last.id)
       end
 
       it 'create the whole board' do

@@ -6,6 +6,14 @@ class Generation < ApplicationRecord
 
   validates :generation_number, presence: true
 
+  def as_json
+    {
+      id:,
+      generation_number:,
+      cells:
+    }
+  end
+
   def next_generations(number_of_generations = 1)
     Generation.transaction do
       (1..number_of_generations).inject(self) do |last_generation, _|
@@ -13,6 +21,11 @@ class Generation < ApplicationRecord
         new_generation.generation_number += 1
         new_generation_state(new_generation)
         new_generation.save!
+
+        board.increment!(:attempts_count)
+
+        break new_generation if board.game_over?
+
         new_generation
       end
     end

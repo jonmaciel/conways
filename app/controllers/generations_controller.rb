@@ -8,7 +8,7 @@ class GenerationsController < ApplicationController
     next_gen = generation.next_generations(params[:number_of_generations]&.to_i || 1)
 
     if next_gen.save
-      render json: { id: next_gen.id }, status: :created
+      render json: { board: @board }, status: :created
     else
       render json: { error: generation.errors.full_messages }, status: :unprocessable_entity
     end
