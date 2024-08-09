@@ -1,7 +1,15 @@
 # frozen_string_literal: true
 
 class GenerationsController < ApplicationController
-  before_action :set_board, only: %i[next_generation]
+  before_action :set_board, only: %i[index show next_generation]
+
+  def index
+    render json: { generations: @board.generations }, status: :ok
+  end
+
+  def show
+    render json: { generation: @board.generations.find(params[:id]) }, status: :ok
+  end
 
   def next_generation
     generation = @board.generations.last

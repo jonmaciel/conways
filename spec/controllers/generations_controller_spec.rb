@@ -7,6 +7,24 @@ RSpec.describe GenerationsController, type: :controller do
     let(:board) { create(:board, :three_by_three) }
     let!(:generation) { board.generations.first }
 
+    describe '#index' do
+      it 'returns the generations' do
+        post :index, params: { board_id: board.id }
+
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body).size).to eq(1)
+      end
+    end
+
+    describe '#show' do
+      it 'returns the generation' do
+        post :show, params: { board_id: board.id, id: generation.id }
+
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)['generation']['id']).to eq(generation.id)
+      end
+    end
+
     describe '#next_generation' do
       context 'when not specified number of generations' do
         it 'creates only one generation' do

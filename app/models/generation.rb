@@ -6,7 +6,7 @@ class Generation < ApplicationRecord
 
   validates :generation_number, presence: true
 
-  def as_json
+  def as_json(*_args)
     {
       id:,
       generation_number:,

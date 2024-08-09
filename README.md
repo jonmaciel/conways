@@ -54,6 +54,8 @@ rails s
 - **GET** `/boards/:id`: Retrieve a specific board.
 - **POST** `/boards`: Upload a CSV file to create a new board.
 - **POST** `/boards/:id/next_generation`: Advance the board to the next generation.
+- **GET** `/boards/:id/generations`: Retrieve all generations of a board.
+- **GET** `/boards/:id/generations/:id`: Retrieve a specific generation of a board.
 
 
 ## Testing
