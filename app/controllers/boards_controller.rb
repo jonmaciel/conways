@@ -15,7 +15,9 @@ class BoardsController < ApplicationController
     end
   end
 
+
   private
+
 
   def validate_csv
     return if CsvValidator.new(csv_data).valid?
