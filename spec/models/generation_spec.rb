@@ -31,8 +31,8 @@ RSpec.describe Generation, type: :model do
     expect(generation.cells.count).to eq(6)
   end
 
-  describe '#next_generation' do
-    let(:next_gen) { generation.next_generation }
+  describe '#next_generations' do
+    let(:next_gen) { generation.next_generations }
 
     it 'creates a new generation with incremented generation_number' do
       expect(next_gen.generation_number).to eq(generation.generation_number + 1)
@@ -41,7 +41,7 @@ RSpec.describe Generation, type: :model do
     it 'rolls back if saving new generation fails' do
       allow_any_instance_of(Cell).to receive(:save!).and_raise(ActiveRecord::RecordInvalid)
 
-      expect { generation.next_generation }.to raise_error(ActiveRecord::RecordInvalid)
+      expect { generation.next_generations }.to raise_error(ActiveRecord::RecordInvalid)
       expect { generation.reload }.to change { generation.cells.count }.by(0)
     end
 
@@ -63,6 +63,22 @@ RSpec.describe Generation, type: :model do
     it 'brings to life cells with exactly three live neighbors' do
       cell = next_gen.cells.find_by(x: 1, y: 2)
       expect(cell.alive).to be(true)
+    end
+
+    context 'when it jumps more than 1 generation' do
+      let(:number_of_generations) { rand(2..10) }
+
+      it 'creates the generations' do
+        expect do
+          generation.next_generations(number_of_generations)
+        end.to change { Generation.count }.by(number_of_generations)
+      end
+
+      it 'creates the last generation with incremented generation_number' do
+        last_generation = generation.next_generations(number_of_generations)
+
+        expect(last_generation.generation_number).to eq(generation.generation_number + number_of_generations)
+      end
     end
   end
 end

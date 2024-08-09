@@ -5,7 +5,7 @@ class GenerationsController < ApplicationController
 
   def next_generation
     generation = @board.generations.last
-    next_gen = generation.next_generation
+    next_gen = generation.next_generations(params[:number_of_generations]&.to_i || 1)
 
     if next_gen.save
       render json: { id: next_gen.id }, status: :created

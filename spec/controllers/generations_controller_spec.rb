@@ -5,16 +5,34 @@ require 'rails_helper'
 RSpec.describe GenerationsController, type: :controller do
   describe 'POST #next_generation' do
     let(:board) { create(:board, :three_by_three) }
-    let(:generation) { board.generations.first }
+    let!(:generation) { board.generations.first }
 
-    context 'with existing generation' do
-      it 'creates the next generation and returns its id' do
-        post :next_generation, params: { board_id: board.id }
+    describe '#next_generation' do
+      context 'when not specified number of generations' do
+        it 'creates only one generation' do
+          expect do
+            post :next_generation, params: { board_id: board.id }
+          end.to change(Generation, :count).by(1)
+        end
 
-        json_response = JSON.parse(response.body)
+        it 'creates the next generation and returns its id' do
+          post :next_generation, params: { board_id: board.id }
 
-        expect(response).to have_http_status(:created)
-        expect(json_response['id']).to eq(Generation.last.id)
+          json_response = JSON.parse(response.body)
+
+          expect(response).to have_http_status(:created)
+          expect(json_response['id']).to eq(Generation.last.id)
+        end
+      end
+
+      context 'when especified number of generations' do
+        let(:number_of_generations) { rand(2..10) }
+
+        it 'creates the generations' do
+          expect do
+            post :next_generation, params: { board_id: board.id, number_of_generations: }
+          end.to change(Generation, :count).by(number_of_generations)
+        end
       end
     end
 
