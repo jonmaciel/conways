@@ -13,6 +13,8 @@ This is the backend for Conway's Game of Life, implemented in Ruby on Rails. The
 - [Installation](#installation)
 - [API Endpoints](#api-endpoints)
 - [Testing](#testing)
+- [Code quality](#code-quality)
+- [CSV sample](#csv-sample)
 
 ## Features
 
@@ -57,7 +59,25 @@ rails s
 ## Testing
 ```bash
 bundle exec rspec
+```
+## Code quality
 
+```bash
+bundle exec rubocop
+```
+
+## CSV sample
+
+```
+1,0,1,0,0,1,0,1,0
+0,1,0,1,0,0,1,0,1
+0,0,1,0,1,0,0,1,0
+1,0,1,0,0,0,1,0,0
+0,1,0,1,1,0,1,0,1
+1,0,0,0,1,1,0,0,1
+0,0,1,0,1,0,1,1,0
+1,0,0,1,0,0,1,0,1
+0,1,0,0,1,0,1,0,0
 ```
 
 
