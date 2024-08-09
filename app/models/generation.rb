@@ -21,7 +21,7 @@ class Generation < ApplicationRecord
       (1..number_of_generations).inject(self) do |last_generation, _|
         new_generation = last_generation.dup
         new_generation.generation_number += 1
-        new_generation_state(new_generation)
+        new_generation_state(new_generation, last_generation)
         new_generation.save!
 
         board.increment!(:attempts_count)
@@ -35,16 +35,16 @@ class Generation < ApplicationRecord
 
   private
 
-  def new_generation_state(new_generation)
+  def new_generation_state(new_generation, last_generation)
     Generation.transaction do
       new_generation.save!
 
-      cells.find_each do |cell|
+      last_generation.cells.find_each do |cell|
         new_generation.cells.create!(
           x: cell.x, y: cell.y, alive: next_cell_state(cell)
         )
       end
-      add_new_born_cells(new_generation)
+      add_new_born_cells(new_generation, last_generation)
     end
   end
 
@@ -57,21 +57,23 @@ class Generation < ApplicationRecord
     live_neighbors == 3
   end
 
-  def add_new_born_cells(new_generation)
-    potential_new_cells.each do |coordinates|
+  def add_new_born_cells(new_generation, last_generation)
+    potential_new_cells(last_generation).each do |coordinates|
       x, y = coordinates
-      live_neighbors = cells.where(x: (x - 1)..(x + 1), y: (y - 1)..(y + 1), alive: true)
-                            .where.not(x:, y:).count
+      live_neighbors = last_generation.cells.where(x: (x - 1)..(x + 1), y: (y - 1)..(y + 1), alive: true)
+                                      .where.not(x:, y:).count
 
       new_generation.cells.find_or_create_by!(x:, y:, alive: true) if live_neighbors == 3
     end
   end
 
-  def potential_new_cells
+  def potential_new_cells(last_generation)
     potential_cells = Set.new
-    cells.find_each do |cell|
+    last_generation.cells.find_each do |cell|
       (-1..1).each do |dx|
         (-1..1).each do |dy|
+          next if dx.zero? && dy.zero?
+
           potential_cells.add([cell.x + dx, cell.y + dy]) unless dx.zero? && dy.zero?
         end
       end
