@@ -28,12 +28,14 @@ RSpec.describe GenerationsController, type: :controller do
       end
 
       context 'when the number of generations is specified' do
-        let(:number_of_generations) { rand(2..10) }
+        let(:number_of_generations) { 15 }
 
         it 'creates the generations' do
-          expect do
-            post :next_generation, params: { board_id: board.id, number_of_generations: }
-          end.to change(Generation, :count).by(number_of_generations)
+          # the next generations is already tested in the Generation model spec
+          expect_any_instance_of(Generation)
+            .to receive(:next_generations).with(number_of_generations).once.and_return(generation)
+
+          post :next_generation, params: { board_id: board.id, number_of_generations: }
         end
       end
     end

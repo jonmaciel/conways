@@ -49,20 +49,28 @@ class Generation < ApplicationRecord
   end
 
   def next_cell_state(cell)
+    # Count the number of alive neighbors around the given cell
     live_neighbors = cells.where(x: (cell.x - 1)..(cell.x + 1), y: (cell.y - 1)..(cell.y + 1), alive: true)
                           .where.not(id: cell.id).count
 
+    # Determine the next state of the cell based on the number of alive neighbors
+    # If the cell is alive, it remains alive if it has 2 or 3 alive neighbors
+    # If the cell is dead, it becomes alive if it has exactly 3 alive neighbors
     return [2, 3].include?(live_neighbors) if cell.alive
 
     live_neighbors == 3
   end
 
   def add_new_born_cells(new_generation, last_generation)
+    # Get potential new cell coordinates based on the last generation's cells
     potential_new_cells(last_generation).each do |coordinates|
       x, y = coordinates
+
+      # Count the number of alive neighbors for the potential new cell
       live_neighbors = last_generation.cells.where(x: (x - 1)..(x + 1), y: (y - 1)..(y + 1), alive: true)
                                       .where.not(x:, y:).count
 
+      # Create a new cell in the new generation if it has exactly 3 alive neighbors
       new_generation.cells.find_or_create_by!(x:, y:, alive: true) if live_neighbors == 3
     end
   end
