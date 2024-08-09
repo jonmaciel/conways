@@ -1,6 +1,6 @@
 # Conway's Game of Life - Backend
 
-This is the backend for Conway's Game of Life, implemented in Ruby on Rails. The backend manages boards and their generations, providing an API for the front-end interface.
+This is the backend for Conway's Game of Life, implemented in Ruby on Rails. The backend manages boards and their generations, providing an API for the [front-end interface](https://github.com/jonmaciel/conways-ui).
 
 ## Ruby version
 
