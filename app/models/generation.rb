@@ -10,7 +10,8 @@ class Generation < ApplicationRecord
     {
       id:,
       generation_number:,
-      cells:
+      cells:,
+      visual_representation:
     }
   end
 
@@ -33,7 +34,48 @@ class Generation < ApplicationRecord
     end
   end
 
+  # Generates a visual representation of the generation using '0' and '1'
+  def visual_representation
+    # Initializes an empty grid based on the minimum and maximum coordinates of the cells
+    grid =
+      Array.new(max_y - min_y + 1) { Array.new(max_x - min_x + 1, '0') }
+
+    fill_grid_with_cells(grid)
+    format_grid_as_string(grid)
+  end
+
   private
+
+  def min_x
+    @min_x ||= cells.minimum(:x) || 0
+  end
+
+  def min_y
+    @min_y ||= cells.minimum(:y) || 0
+  end
+
+  def max_x
+    @max_x ||= cells.maximum(:x) || 0
+  end
+
+  def max_y
+    @max_y ||= cells.maximum(:y) || 0
+  end
+
+  # Fills the grid with '1' for alive cells and '0' for dead cells
+  def fill_grid_with_cells(grid)
+    cells.each do |cell|
+      x = cell.x - min_x
+      y = cell.y - min_y
+
+      grid[y][x] = cell.alive ? '1' : '0'
+    end
+  end
+
+  # Formats the grid into a string representation for easy visualization
+  def format_grid_as_string(grid)
+    grid.map { |row| row.join(' ') }.join("\n")
+  end
 
   def new_generation_state(new_generation, last_generation)
     Generation.transaction do

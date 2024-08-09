@@ -101,4 +101,11 @@ RSpec.describe Generation, type: :model do
       end
     end
   end
+
+  describe '#visual_representation' do
+    it 'returns correct visual representation' do
+      expected_output = "1 1 1\n1 1 1"
+      expect(generation.visual_representation).to eq(expected_output)
+    end
+  end
 end
